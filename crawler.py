@@ -3,7 +3,7 @@ from bilibili_api import user, sync
 import json
 
 # 配置：替换为你要跟踪的UP主的MID
-UP_MID = int(os.environ.get('UP_MID', 'YOUR_UP_MID'))  # 示例：12345678
+UP_MID = int(os.environ.get('UP_MID', '547072854'))  # 示例：12345678
 
 async def main():
     u = user.User(UP_MID)
