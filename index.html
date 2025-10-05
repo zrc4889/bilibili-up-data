@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B站UP主数据</title>
+    <style>
+        body { font-family: sans-serif; margin: 2rem; }
+        .video, .dynamic { border-bottom: 1px solid #eee; padding: 1rem 0; }
+    </style>
+</head>
+<body>
+    <h1 id="up-name">UP主数据加载中...</h1>
+    <div id="data-container"></div>
+
+    <script>
+        fetch('./data.json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('up-name').textContent = `UP主: ${data.user_info.name} (粉丝: ${data.user_info.follower})`;
+                const container = document.getElementById('data-container');
+
+                // 显示视频
+                const videoTitle = document.createElement('h2');
+                videoTitle.textContent = '最新视频';
+                container.appendChild(videoTitle);
+
+                data.videos.forEach(video => {
+                    const div = document.createElement('div');
+                    div.className = 'video';
+                    div.innerHTML = `
+                        <h3>${video.title}</h3>
+                        <p>${video.description}</p>
+                        <p><strong>播放量:</strong> ${video.play} | <strong>发布时间:</strong> ${new Date(video.created * 1000).toLocaleString()}</p>
+                    `;
+                    container.appendChild(div);
+                });
+
+                // 显示动态
+                const dynamicTitle = document.createElement('h2');
+                dynamicTitle.textContent = '最新动态';
+                container.appendChild(dynamicTitle);
+
+                data.dynamics.forEach(dynamic => {
+                    const div = document.createElement('div');
+                    div.className = 'dynamic';
+                    div.innerHTML = `<p>动态ID: ${dynamic.dynamic_id} | 时间: ${new Date(dynamic.timestamp * 1000).toLocaleString()}</p>`;
+                    container.appendChild(div);
+                });
+            })
+            .catch(err => {
+                console.error('加载数据失败:', err);
+                document.getElementById('data-container').innerHTML = '<p>加载数据失败。</p>';
+            });
+    </script>
+</body>
+</html>
